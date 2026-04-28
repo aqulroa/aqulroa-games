@@ -7,7 +7,7 @@
     <title>A Q U A R E L L E | Музей современного искусства</title>
 
     <link rel="icon"
-        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23ff7eb3'/></svg>">
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%23ff7eb3'/><stop offset='100%25' stop-color='%238fd3f4'/></linearGradient></defs><path d='M50 10 C50 10, 20 40, 20 65 C20 81.5, 33.5 95, 50 95 C66.5 95, 80 81.5, 80 65 C80 40, 50 10, 50 10 Z' fill='url(%23g)'/></svg>">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,10 +23,10 @@
                 extend: {
                     colors: {
                         background: '#030305',
-                        surface: 'rgba(10, 10, 14, 0.75)', /* Сделал стекло темнее для читаемости */
+                        surface: 'rgba(10, 10, 14, 0.75)',
                         border: 'rgba(255, 255, 255, 0.08)',
                         foreground: '#ffffff',
-                        muted: '#a1a1aa', /* Сделал текст чуть светлее */
+                        muted: '#a1a1aa',
                         wc1: '#ff7eb3',
                         wc2: '#8fd3f4',
                         wc3: '#d8b5ff',
@@ -73,7 +73,7 @@
             transform: translate(-50%, -50%);
             border-radius: 50%;
             pointer-events: none;
-            z-index: 99999;
+            z-index: 999999; /* Исправлено: теперь курсор выше модального окна */
         }
         #cursor-dot {
             width: 6px; height: 6px;
@@ -87,7 +87,7 @@
         }
         body:hover #cursor-dot { width: 8px; height: 8px; }
 
-        /* АКВАРЕЛЬНЫЕ ПЯТНА (Приглушенные) */
+        /* АКВАРЕЛЬНЫЕ ПЯТНА */
         .ambient-canvas {
             position: fixed;
             top: 0; left: 0;
@@ -101,7 +101,7 @@
             position: absolute;
             border-radius: 50%;
             filter: blur(140px);
-            opacity: 0.35; /* Уменьшил непрозрачность, чтобы не мешали тексту */
+            opacity: 0.35;
             mix-blend-mode: screen;
             animation: breathe 20s infinite alternate ease-in-out;
             transition: transform 0.3s ease-out;
@@ -121,7 +121,7 @@
             position: fixed;
             inset: 0;
             background: #030305;
-            z-index: 10000;
+            z-index: 1000000;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -165,6 +165,19 @@
             background-size: 40px 40px;
             background-image: linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
                               linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+        }
+        
+        /* Кастомный скроллбар для модального окна */
+        .custom-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
         }
     </style>
 </head>
@@ -251,6 +264,7 @@
                     <img src="https://images.unsplash.com/photo-1618331835717-801e976710b2?auto=format&fit=crop&q=80&w=1600"
                         alt="Watercolor texture" class="w-full h-full object-cover art-img opacity-80">
                     <div class="absolute inset-0 bg-black/20"></div>
+
                     <div
                         class="absolute bottom-8 right-8 glass !bg-[#050508]/80 p-5 rounded-xl text-right border-white/10">
                         <p class="font-display italic text-2xl text-white">A la Prima #01</p>
@@ -465,12 +479,12 @@
                 <p><strong class="text-white">1. Общие положения:</strong> Доступ к цифровой галерее Aquarelle
                     предоставляется исключительно верифицированным авторам и кураторам. Передача учетных данных третьим
                     лицам строго запрещена.</p>
-                <p><strong class="text-white">2. Авторские права:</strong> Все загруженные в систему материалы,
-                    изображения и текстуры остаются интеллектуальной собственностью их авторов. Платформа не имеет права
-                    использовать их в коммерческих целях без явного согласия.</p>
+                <p><strong class="text-white">2. Происхождение материалов:</strong> Визуальные ассеты, текстуры и
+                    фотографии предоставляются по открытым лицензиям (например, Unsplash) для демонстрационных и
+                    эстетических целей. Галерея не претендует на эксклюзивное авторство исходных фотографий.</p>
                 <p><strong class="text-white">3. Качество контента:</strong> Галерея придерживается строгих визуальных
-                    стандартов (Canvas Design System). Работы низкого разрешения или нарушающие эстетический код
-                    пространства могут быть скрыты кураторами.</p>
+                    стандартов. Работы низкого разрешения или нарушающие эстетический код пространства могут быть скрыты
+                    кураторами.</p>
                 <p><strong class="text-white">4. Технические требования:</strong> Принимаются оцифрованные работы в
                     цветовом пространстве sRGB. Размер файла не должен превышать 50MB.</p>
             </div>
