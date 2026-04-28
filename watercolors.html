@@ -1,28 +1,34 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Акварельные пейзажи и вдохновение</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <title>Акварельные пейзажи | Вдохновение</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Montserrat:wght@200;300;400;500&display=swap"
+        rel="stylesheet">
     <style>
         :root {
-            --primary: #5f9ea0;
-            --secondary: #ffb6c1;
-            --bg: #fafafa;
-            --text: #333;
+            --glass-bg: rgba(255, 255, 255, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.4);
+            --text-main: #2c3e50;
+            --text-muted: #5c6c7b;
+            --accent: #78a2b7;
         }
 
-        body, html {
+        body,
+        html {
             margin: 0;
             padding: 0;
             font-family: 'Montserrat', sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
+            background-color: #fdfbf7;
+            color: var(--text-main);
             overflow-x: hidden;
+            scroll-behavior: smooth;
         }
 
-        /* Watercolor Background Effect */
+        /* Сложный акварельный фон */
         .watercolor-bg {
             position: fixed;
             top: 0;
@@ -30,204 +36,336 @@
             width: 100vw;
             height: 100vh;
             z-index: -1;
-            background: 
-                radial-gradient(circle at 15% 50%, rgba(95, 158, 160, 0.4), transparent 50%),
-                radial-gradient(circle at 85% 30%, rgba(255, 182, 193, 0.4), transparent 50%),
-                radial-gradient(circle at 50% 80%, rgba(173, 216, 230, 0.4), transparent 50%);
-            filter: blur(40px);
-            opacity: 0.8;
+            background:
+                radial-gradient(circle at 10% 20%, rgba(120, 162, 183, 0.35), transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(228, 179, 164, 0.35), transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(184, 204, 216, 0.2), transparent 60%);
+            filter: blur(60px);
+            animation: pulseBg 15s infinite alternate ease-in-out;
         }
 
+        @keyframes pulseBg {
+            0% {
+                transform: scale(1);
+            }
+
+            100% {
+                transform: scale(1.1);
+            }
+        }
+
+        /* Шапка сайта */
         header {
-            padding: 40px 20px;
+            padding: 8vh 20px 4vh;
             text-align: center;
+            animation: fadeInDown 1s ease-out;
         }
 
         h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 3.5rem;
-            color: #2c3e50;
-            margin-bottom: 10px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(3rem, 6vw, 5rem);
+            font-weight: 400;
+            letter-spacing: -0.02em;
+            color: #1a252f;
+            margin: 0 0 15px 0;
         }
 
         p.subtitle {
-            font-size: 1.2rem;
-            color: #555;
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            color: var(--text-muted);
             font-weight: 300;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
         }
 
+        /* Галерея (Эффект стекла) */
         .gallery {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 40px;
             padding: 40px;
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
         .art-card {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            transition: transform 0.3s ease;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        .art-card:nth-child(1) {
+            animation-delay: 0.2s;
+        }
+
+        .art-card:nth-child(2) {
+            animation-delay: 0.4s;
+        }
+
+        .art-card:nth-child(3) {
+            animation-delay: 0.6s;
         }
 
         .art-card:hover {
-            transform: translateY(-10px);
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.8);
         }
 
         .art-img {
             width: 100%;
-            height: 250px;
-            background: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
-            border-radius: 8px;
-            margin-bottom: 15px;
-            opacity: 0.8;
+            height: 300px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
         }
-        
-        .art-img.two { background: linear-gradient(120deg, #f6d365 0%, #fda085 100%); }
-        .art-img.three { background: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%); }
+
+        /* Абстрактные картины градиентами */
+        .art-img.one {
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+        }
+
+        .art-img.two {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+        }
+
+        .art-img.three {
+            background: linear-gradient(135deg, #cfd9df 0%, #e2ebf0 100%);
+        }
 
         .art-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            font-style: italic;
             margin: 0 0 10px 0;
+            color: #1a252f;
         }
 
-        /* Login Button & Modal */
+        .art-card p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text-muted);
+            margin: 0;
+            font-weight: 300;
+        }
+
+        /* Незаметная кнопка входа */
         .login-btn {
             position: absolute;
-            top: 20px;
-            right: 20px;
+            top: 30px;
+            right: 40px;
             background: transparent;
-            border: 1px solid rgba(0,0,0,0.1);
-            padding: 8px 16px;
-            border-radius: 20px;
+            border: 1px solid rgba(44, 62, 80, 0.2);
+            padding: 10px 24px;
+            border-radius: 30px;
             cursor: pointer;
             font-family: 'Montserrat', sans-serif;
-            color: #555;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: var(--text-main);
             transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
         }
 
         .login-btn:hover {
-            background: rgba(0,0,0,0.05);
+            background: var(--text-main);
+            color: white;
+            border-color: var(--text-main);
         }
 
+        /* Модальное окно входа */
         .modal {
             display: none;
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255,255,255,0.8);
-            backdrop-filter: blur(10px);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(253, 251, 247, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             z-index: 100;
             justify-content: center;
             align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
 
         .modal.active {
             display: flex;
+            opacity: 1;
         }
 
         .login-box {
             background: white;
-            padding: 40px;
-            border-radius: 16px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            width: 300px;
+            padding: 50px 40px;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 320px;
             text-align: center;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .modal.active .login-box {
+            transform: translateY(0);
         }
 
         .login-box h2 {
-            font-family: 'Playfair Display', serif;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.2rem;
             margin-bottom: 30px;
-            color: #333;
+            color: #1a252f;
         }
 
         .input-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             text-align: left;
         }
 
         .input-group label {
             display: block;
-            margin-bottom: 5px;
-            font-size: 0.9rem;
-            color: #666;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .input-group input {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+            padding: 12px 15px;
+            border: 1px solid #e1e8ed;
+            border-radius: 12px;
             outline: none;
             box-sizing: border-box;
             font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            background: #fafbfc;
+            transition: all 0.3s ease;
         }
 
         .input-group input:focus {
-            border-color: var(--primary);
+            border-color: var(--accent);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(120, 162, 183, 0.1);
         }
 
         .submit-btn {
             width: 100%;
-            padding: 12px;
-            background: var(--primary);
+            padding: 14px;
+            background: #1a252f;
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             cursor: pointer;
-            font-weight: 600;
+            font-weight: 500;
             font-family: 'Montserrat', sans-serif;
-            transition: background 0.3s ease;
+            font-size: 1rem;
+            transition: background 0.3s ease, transform 0.1s ease;
         }
 
         .submit-btn:hover {
-            background: #4a7d7f;
+            background: #2c3e50;
         }
-        
+
+        .submit-btn:active {
+            transform: scale(0.98);
+        }
+
         #error-msg {
-            color: red;
+            color: #e74c3c;
             font-size: 0.85rem;
-            margin-top: 10px;
+            font-weight: 500;
+            margin-top: 15px;
             display: none;
+        }
+
+        .close-btn {
+            margin-top: 20px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-family: 'Montserrat', sans-serif;
+            transition: color 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: #1a252f;
+        }
+
+        /* Анимации */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
+
 <body>
 
     <div class="watercolor-bg"></div>
 
-    <button class="login-btn" onclick="document.getElementById('loginModal').classList.add('active')">Войти</button>
+    <button class="login-btn" onclick="document.getElementById('loginModal').classList.add('active')">Вход</button>
 
     <header>
         <h1>Искусство Акварели</h1>
-        <p class="subtitle">Погрузитесь в мир прозрачных красок и легких мазков</p>
+        <p class="subtitle">Поэзия цвета и воды</p>
     </header>
 
     <div class="gallery">
         <div class="art-card">
             <div class="art-img one"></div>
             <h3 class="art-title">Весенний рассвет</h3>
-            <p>Техника по сырому. Мягкие переходы фиолетовых и синих оттенков.</p>
+            <p>Техника «по сырому». Мягкие переходы холодных утренних оттенков.</p>
         </div>
         <div class="art-card">
             <div class="art-img two"></div>
             <h3 class="art-title">Осенний натюрморт</h3>
-            <p>Теплые тона охры и кадмия создают уютную атмосферу.</p>
+            <p>Теплые тона охры и кадмия создают глубокую и уютную атмосферу.</p>
         </div>
         <div class="art-card">
             <div class="art-img three"></div>
             <h3 class="art-title">Морской бриз</h3>
-            <p>Легкость и прозрачность воды передана тонкими слоями лазури.</p>
+            <p>Легкость и потрясающая прозрачность воды, переданная тончайшими слоями лазури.</p>
         </div>
     </div>
 
-    <!-- Login Modal -->
     <div class="modal" id="loginModal">
         <div class="login-box">
-            <h2>Вход для авторов</h2>
+            <h2>Доступ автора</h2>
             <form id="loginForm">
                 <div class="input-group">
                     <label>Логин</label>
@@ -237,10 +375,11 @@
                     <label>Пароль</label>
                     <input type="password" id="password" required>
                 </div>
-                <button type="submit" class="submit-btn">Войти</button>
+                <button type="submit" class="submit-btn">Войти в систему</button>
                 <div id="error-msg">Неверный логин или пароль</div>
             </form>
-            <button style="margin-top: 15px; background: none; border: none; color: #999; cursor: pointer; text-decoration: underline;" onclick="document.getElementById('loginModal').classList.remove('active')">Закрыть</button>
+            <button class="close-btn"
+                onclick="document.getElementById('loginModal').classList.remove('active')">Вернуться в галерею</button>
         </div>
     </div>
 
@@ -268,4 +407,5 @@
         });
     </script>
 </body>
+
 </html>
