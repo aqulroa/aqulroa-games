@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A Q U A R E L L E | Музей современного искусства</title>
 
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23ff7eb3'/></svg>">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -19,15 +22,15 @@
             theme: {
                 extend: {
                     colors: {
-                        background: '#050507',
-                        surface: 'rgba(15, 15, 20, 0.6)',
-                        border: 'rgba(255, 255, 255, 0.1)',
+                        background: '#030305',
+                        surface: 'rgba(10, 10, 14, 0.75)', /* Сделал стекло темнее для читаемости */
+                        border: 'rgba(255, 255, 255, 0.08)',
                         foreground: '#ffffff',
-                        muted: '#8a8a93',
-                        wc1: '#ff7eb3', // Pink watercolor
-                        wc2: '#8fd3f4', // Blue watercolor
-                        wc3: '#d8b5ff', // Purple watercolor
-                        wc4: '#fdfa72', // Yellow watercolor
+                        muted: '#a1a1aa', /* Сделал текст чуть светлее */
+                        wc1: '#ff7eb3',
+                        wc2: '#8fd3f4',
+                        wc3: '#d8b5ff',
+                        wc4: '#fdfa72',
                     },
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
@@ -44,41 +47,33 @@
     <style type="text/tailwindcss">
         @layer utilities {
             .glass {
-                @apply bg-surface backdrop-blur-xl border border-border;
+                @apply bg-surface backdrop-blur-2xl border border-border shadow-2xl;
             }
             .text-outline {
-                -webkit-text-stroke: 1px rgba(255,255,255,0.2);
+                -webkit-text-stroke: 1px rgba(255,255,255,0.3);
                 color: transparent;
             }
         }
 
-        /* --- БАЗА И СКРОЛЛБАР --- */
         body {
             background-color: theme('colors.background');
             color: theme('colors.foreground');
             overflow-x: hidden;
-            cursor: none; /* Скрываем стандартный курсор для кастомного */
+            cursor: none;
         }
         
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #050507;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #333;
-            border-radius: 4px;
-        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #030305; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
 
-        /* --- КАСТОМНЫЙ КУРСОР --- */
+        /* КАСТОМНЫЙ КУРСОР */
         #cursor-dot, #cursor-blur {
             position: fixed;
             top: 0; left: 0;
             transform: translate(-50%, -50%);
             border-radius: 50%;
             pointer-events: none;
-            z-index: 9999;
+            z-index: 99999;
         }
         #cursor-dot {
             width: 6px; height: 6px;
@@ -87,36 +82,33 @@
         }
         #cursor-blur {
             width: 40px; height: 40px;
-            border: 1px solid rgba(255,255,255,0.3);
+            border: 1px solid rgba(255,255,255,0.4);
             transition: transform 0.1s ease-out, width 0.2s, height 0.2s, background-color 0.2s;
         }
         body:hover #cursor-dot { width: 8px; height: 8px; }
 
-        /* --- АКВАРЕЛЬНЫЕ ПЯТНА (ЖИВОЙ ФОН) --- */
+        /* АКВАРЕЛЬНЫЕ ПЯТНА (Приглушенные) */
         .ambient-canvas {
             position: fixed;
             top: 0; left: 0;
             width: 100vw; height: 100vh;
             z-index: -1;
             overflow: hidden;
-            background: #050507;
+            background: #030305;
             pointer-events: none;
         }
-        
         .watercolor-blob {
             position: absolute;
             border-radius: 50%;
-            filter: blur(120px);
-            opacity: 0.6;
+            filter: blur(140px);
+            opacity: 0.35; /* Уменьшил непрозрачность, чтобы не мешали тексту */
             mix-blend-mode: screen;
             animation: breathe 20s infinite alternate ease-in-out;
-            transition: transform 0.3s ease-out; /* Для параллакса от мыши */
+            transition: transform 0.3s ease-out;
         }
-
         .blob-1 { width: 50vw; height: 50vw; background: theme('colors.wc1'); top: -10%; left: -10%; animation-delay: 0s; }
         .blob-2 { width: 60vw; height: 60vw; background: theme('colors.wc2'); bottom: -20%; right: -10%; animation-delay: -5s; }
         .blob-3 { width: 40vw; height: 40vw; background: theme('colors.wc3'); top: 30%; left: 30%; animation-delay: -10s; }
-        .blob-4 { width: 45vw; height: 45vw; background: theme('colors.wc4'); top: -20%; right: 20%; filter: blur(150px); animation-delay: -15s; opacity: 0.4;}
 
         @keyframes breathe {
             0% { transform: scale(1) translate(0, 0) rotate(0deg); }
@@ -124,11 +116,11 @@
             100% { transform: scale(0.9) translate(-5%, -5%) rotate(-10deg); }
         }
 
-        /* --- ПРЕЛОАДЕР --- */
+        /* ПРЕЛОАДЕР */
         #preloader {
             position: fixed;
             inset: 0;
-            background: #050507;
+            background: #030305;
             z-index: 10000;
             display: flex;
             justify-content: center;
@@ -143,63 +135,36 @@
             animation: pulse 2s infinite;
         }
 
-        /* --- АНИМАЦИИ ПОЯВЛЕНИЯ ПРИ СКРОЛЛЕ --- */
+        /* АНИМАЦИИ ПОЯВЛЕНИЯ */
         .reveal {
             opacity: 0;
-            transform: translateY(60px);
-            transition: all 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+            transform: translateY(40px);
+            transition: all 1s cubic-bezier(0.19, 1, 0.22, 1);
         }
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        .reveal.active { opacity: 1; transform: translateY(0); }
         .reveal-delay-1 { transition-delay: 0.2s; }
         .reveal-delay-2 { transition-delay: 0.4s; }
-        .reveal-delay-3 { transition-delay: 0.6s; }
 
         .reveal-scale {
             opacity: 0;
-            transform: scale(0.9);
-            transition: all 1.5s cubic-bezier(0.19, 1, 0.22, 1);
+            transform: scale(0.95);
+            transition: all 1.2s cubic-bezier(0.19, 1, 0.22, 1);
         }
-        .reveal-scale.active {
-            opacity: 1;
-            transform: scale(1);
-        }
+        .reveal-scale.active { opacity: 1; transform: scale(1); }
 
-        /* --- ИМИТАЦИЯ КАРТИН (ШУМ + ГРАДИЕНТ) --- */
-        .art-canvas {
-            position: relative;
-            overflow: hidden;
-            background-color: #111;
+        /* Ховеры картин */
+        .art-img {
+            transition: transform 1.5s cubic-bezier(0.19, 1, 0.22, 1);
         }
-        .art-canvas::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E");
-            mix-blend-mode: overlay;
-            z-index: 2;
-            pointer-events: none;
-        }
-        .art-paint-1 { background: radial-gradient(circle at 30% 70%, #ff7eb3 0%, transparent 60%), radial-gradient(circle at 70% 30%, #8fd3f4 0%, transparent 60%); }
-        .art-paint-2 { background: linear-gradient(45deg, #12c2e9, #c471ed, #f64f59); }
-        .art-paint-3 { background: radial-gradient(circle at 50% 50%, #d8b5ff 0%, #111 80%); }
-        .art-paint-4 { background: linear-gradient(to right, #43e97b 0%, #38f9d7 100%); }
-
-        /* Ховер эффекты для карточек */
-        .group:hover .art-zoom {
+        .group:hover .art-img {
             transform: scale(1.05);
         }
-        .group:hover .glass-overlay {
-            background: rgba(255,255,255,0.05);
-        }
-
-        /* Линии сетки на фоне */
+        
+        /* Линии сетки */
         .grid-bg {
-            background-size: 50px 50px;
-            background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                              linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
         }
     </style>
 </head>
@@ -218,12 +183,15 @@
         <div class="watercolor-blob blob-1" id="blob1"></div>
         <div class="watercolor-blob blob-2" id="blob2"></div>
         <div class="watercolor-blob blob-3" id="blob3"></div>
-        <div class="watercolor-blob blob-4" id="blob4"></div>
     </div>
 
     <nav class="fixed top-0 left-0 w-full z-50 transition-all duration-300" id="navbar">
         <div class="max-w-[1600px] mx-auto px-6 py-6 flex justify-between items-center">
-            <div class="font-display text-2xl tracking-[0.2em] font-semibold text-white uppercase">
+            <div
+                class="font-display text-2xl tracking-[0.2em] font-semibold text-white uppercase flex items-center gap-3">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" fill="#ff7eb3" />
+                </svg>
                 Aquarelle
             </div>
             <div class="flex items-center gap-8">
@@ -231,10 +199,8 @@
                     class="hidden md:block text-sm font-medium text-muted hover:text-white transition-colors tracking-widest uppercase">Философия</a>
                 <a href="#gallery"
                     class="hidden md:block text-sm font-medium text-muted hover:text-white transition-colors tracking-widest uppercase">Экспозиция</a>
-                <button
-                    onclick="document.getElementById('loginModal').classList.remove('hidden'); document.getElementById('loginModal').classList.add('flex'); setTimeout(() => { document.getElementById('loginBox').classList.remove('translate-y-10', 'opacity-0') }, 10);"
-                    class="glass px-6 py-2 rounded-full text-sm font-medium tracking-widest uppercase hover:bg-white hover:text-black transition-all duration-300 hover:cursor-pointer"
-                    id="hover-btn">
+                <button onclick="openLoginModal()"
+                    class="glass px-6 py-2 rounded-full text-sm font-medium tracking-widest uppercase hover:bg-white hover:text-black transition-all duration-300">
                     Войти
                 </button>
             </div>
@@ -251,12 +217,13 @@
                 <span class="text-outline italic">Воды</span> & Цвета
             </h1>
 
-            <p class="text-muted text-lg md:text-xl max-w-2xl mx-auto font-light leading-relaxed reveal-delay-2 mt-8">
+            <p
+                class="text-gray-300 text-lg md:text-xl max-w-2xl mx-auto font-light leading-relaxed reveal-delay-2 mt-8">
                 Прозрачность, застывшая в пигменте. Мы исследуем границу между контролем и хаосом, создавая шедевры,
                 которые дышат на экране.
             </p>
 
-            <div class="mt-16 reveal-delay-3">
+            <div class="mt-16 reveal-delay-2">
                 <p class="text-xs text-muted uppercase tracking-[0.2em] mb-4">Скролльте для погружения</p>
                 <div class="w-[1px] h-24 bg-gradient-to-b from-white/50 to-transparent mx-auto"></div>
             </div>
@@ -271,25 +238,23 @@
                     Мыслящие <br>
                     <span class="italic text-wc1">Кисти</span>
                 </h2>
-                <div class="space-y-6 text-muted font-light text-lg">
-                    <p>
-                        Акварель — это не просто краска. Это диалог художника с физикой жидкостей. Влажная бумага
-                        диктует свои условия, пигмент растекается по капиллярам, создавая формы, которые невозможно
-                        повторить дважды.
-                    </p>
-                    <p>
-                        В нашем музее мы отказались от визуального шума. Только чистый цвет, идеальные градиенты и
-                        архитектурная точность композиции. Текст здесь — лишь тихий акцент, главное слово берет визуал.
-                    </p>
+                <div class="space-y-6 text-gray-300 font-light text-lg">
+                    <p>Акварель — это не просто краска. Это диалог художника с физикой жидкостей. Влажная бумага диктует
+                        свои условия, создавая формы, которые невозможно повторить дважды.</p>
+                    <p>Только чистый цвет и архитектурная точность композиции. Текст здесь — лишь тихий акцент, главное
+                        слово берет визуал.</p>
                 </div>
             </div>
 
             <div class="lg:col-span-7 relative h-[600px] w-full reveal reveal-delay-1">
                 <div class="absolute inset-0 glass rounded-3xl overflow-hidden group">
-                    <div class="w-full h-full art-canvas art-paint-1 art-zoom transition-transform duration-[2s]"></div>
-                    <div class="absolute bottom-8 right-8 glass p-4 rounded-xl text-right">
-                        <p class="font-display italic text-2xl">A la Prima #01</p>
-                        <p class="text-xs uppercase tracking-widest text-muted mt-1">Техника по-сырому</p>
+                    <img src="https://images.unsplash.com/photo-1618331835717-801e976710b2?auto=format&fit=crop&q=80&w=1600"
+                        alt="Watercolor texture" class="w-full h-full object-cover art-img opacity-80">
+                    <div class="absolute inset-0 bg-black/20"></div>
+                    <div
+                        class="absolute bottom-8 right-8 glass !bg-[#050508]/80 p-5 rounded-xl text-right border-white/10">
+                        <p class="font-display italic text-2xl text-white">A la Prima #01</p>
+                        <p class="text-xs uppercase tracking-widest text-wc1 mt-1">Техника по-сырому</p>
                     </div>
                 </div>
             </div>
@@ -300,63 +265,62 @@
         <div class="max-w-[1600px] mx-auto">
             <h2 class="font-display text-4xl mb-12 text-center reveal">Лексикон Акварели</h2>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 auto-rows-[300px]">
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 auto-rows-[320px]">
 
                 <div class="md:col-span-2 lg:col-span-2 glass rounded-3xl overflow-hidden group relative reveal">
-                    <div
-                        class="absolute inset-0 art-canvas art-paint-2 art-zoom transition-transform duration-700 opacity-60">
-                    </div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-background to-transparent opacity-80"></div>
-                    <div class="absolute bottom-0 left-0 p-8">
-                        <h3 class="font-display text-3xl mb-2">Лессировка</h3>
-                        <p class="text-sm text-muted max-w-sm">Многослойное нанесение тонких, полупрозрачных красок для
-                            достижения глубоких, сложных оттенков.</p>
+                    <img src="https://images.unsplash.com/photo-1543857778-c4a1a3e0b2eb?auto=format&fit=crop&q=80&w=1000"
+                        class="absolute inset-0 w-full h-full object-cover art-img opacity-70">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 p-8 z-10">
+                        <h3 class="font-display text-4xl mb-2 text-white">Лессировка</h3>
+                        <p class="text-sm text-gray-300 max-w-sm leading-relaxed">Многослойное нанесение тонких,
+                            полупрозрачных красок для достижения глубоких, сложных оттенков.</p>
                     </div>
                 </div>
 
                 <div
-                    class="glass rounded-3xl overflow-hidden group relative reveal reveal-delay-1 flex items-center justify-center text-center p-8 border border-border/50 hover:border-wc1 transition-colors">
-                    <div
-                        class="absolute inset-0 bg-wc1/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                    </div>
+                    class="glass !bg-[#101015]/90 rounded-3xl overflow-hidden group relative reveal reveal-delay-1 flex items-center justify-center text-center p-8 border hover:border-wc1 transition-colors">
                     <div class="relative z-10">
                         <div
                             class="w-16 h-16 rounded-full border border-wc1 mx-auto mb-6 flex items-center justify-center">
                             <span class="text-wc1 font-light">01</span>
                         </div>
-                        <h3 class="font-display text-2xl mb-2">Сухая кисть</h3>
+                        <h3 class="font-display text-3xl mb-2 text-white">Сухая кисть</h3>
                         <p class="text-xs text-muted uppercase tracking-wider">Фактура и деталь</p>
                     </div>
                 </div>
 
                 <div
                     class="md:col-span-1 lg:col-span-1 row-span-2 glass rounded-3xl overflow-hidden group relative reveal reveal-delay-2">
-                    <div
-                        class="absolute inset-0 art-canvas art-paint-3 art-zoom transition-transform duration-700 opacity-50">
-                    </div>
-                    <div class="absolute inset-0 flex flex-col justify-between p-8">
-                        <div class="self-end text-xs tracking-widest text-muted uppercase">Глубина</div>
+                    <img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&q=80&w=800"
+                        class="absolute inset-0 w-full h-full object-cover art-img opacity-60">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-black/60"></div>
+                    <div class="absolute inset-0 flex flex-col justify-between p-8 z-10">
+                        <div
+                            class="self-end text-xs tracking-widest text-white/70 uppercase glass px-3 py-1 rounded-full">
+                            Глубина</div>
                         <div>
-                            <h3 class="font-display text-4xl mb-4 italic">Грануляция</h3>
-                            <p class="text-sm text-gray-300">Оседание тяжелых частиц пигмента во впадинах бумаги,
-                                создающее невероятную текстуру звездного неба или камня.</p>
+                            <h3 class="font-display text-4xl mb-4 italic text-white">Грануляция</h3>
+                            <p class="text-sm text-gray-300 leading-relaxed">Оседание тяжелых частиц пигмента во
+                                впадинах бумаги, создающее текстуру камня.</p>
                         </div>
                     </div>
                 </div>
 
                 <div
-                    class="glass rounded-3xl overflow-hidden group relative reveal flex flex-col justify-center p-8 bg-white/5">
-                    <h3 class="font-display text-3xl mb-4">Смывка</h3>
-                    <p class="text-sm text-muted">Удаление пигмента влажной кистью для создания бликов или исправления
-                        ошибок.</p>
+                    class="glass !bg-white/5 rounded-3xl overflow-hidden group relative reveal flex flex-col justify-center p-8">
+                    <h3 class="font-display text-3xl mb-4 text-white">Смывка</h3>
+                    <p class="text-sm text-gray-400">Удаление пигмента влажной кистью для создания бликов или
+                        исправления ошибок.</p>
                 </div>
 
                 <div class="md:col-span-2 glass rounded-3xl overflow-hidden group relative reveal reveal-delay-1">
-                    <div
-                        class="absolute inset-0 art-canvas art-paint-4 art-zoom transition-transform duration-700 opacity-60">
-                    </div>
-                    <div class="absolute inset-0 flex items-center justify-center">
-                        <h2 class="font-display text-5xl font-semibold tracking-wide mix-blend-overlay">ГРАДИЕНТ</h2>
+                    <img src="https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?auto=format&fit=crop&q=80&w=1200"
+                        class="absolute inset-0 w-full h-full object-cover art-img opacity-80">
+                    <div class="absolute inset-0 bg-black/40"></div>
+                    <div class="absolute inset-0 flex items-center justify-center z-10">
+                        <h2 class="font-display text-5xl font-semibold tracking-wide text-white drop-shadow-2xl">
+                            ГРАДИЕНТ</h2>
                     </div>
                 </div>
 
@@ -367,50 +331,45 @@
     <section id="gallery" class="py-32 px-6 relative z-10">
         <div class="max-w-[1600px] mx-auto">
             <div class="flex justify-between items-end mb-16 reveal">
-                <h2 class="font-display text-5xl md:text-7xl leading-none">Текущая<br>Экспозиция</h2>
+                <h2 class="font-display text-5xl md:text-7xl leading-none text-white">Текущая<br>Экспозиция</h2>
                 <p class="hidden md:block text-muted max-w-sm text-right text-sm">Наведите на полотно, чтобы рассмотреть
-                    детали пигментации и фактуры бумаги.</p>
+                    детали пигментации.</p>
             </div>
 
             <div class="space-y-32">
-
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center reveal-scale">
-                    <div class="lg:col-span-8 h-[70vh] rounded-2xl overflow-hidden group relative cursor-pointer">
-                        <div
-                            class="absolute inset-0 art-canvas bg-gradient-to-br from-[#ff9a9e] to-[#fecfef] art-zoom duration-1000">
-                        </div>
-                        <div class="absolute inset-0 glass-overlay transition-colors duration-500"></div>
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center reveal-scale">
+                    <div
+                        class="lg:col-span-8 h-[70vh] rounded-2xl overflow-hidden group relative cursor-pointer glass p-2">
+                        <img src="https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&q=80&w=1600"
+                            class="w-full h-full object-cover rounded-xl art-img">
                     </div>
-                    <div class="lg:col-span-4 lg:pl-12">
+                    <div class="lg:col-span-4">
                         <p class="text-wc1 text-sm font-mono mb-4">01 // 2026</p>
-                        <h3 class="font-display text-4xl mb-4">Розовый Туман</h3>
-                        <p class="text-muted mb-6 font-light">Эксперимент с плотностью. Кадмий красный встречается с
-                            титановыми белилами на влажной фактуре Torchon.</p>
-                        <a href="#"
-                            class="text-xs uppercase tracking-[0.2em] border-b border-border hover:border-white transition-colors pb-1">Изучить
-                            работу</a>
+                        <h3 class="font-display text-4xl mb-4 text-white">Розовый Туман</h3>
+                        <p class="text-gray-400 mb-6 font-light leading-relaxed">Эксперимент с плотностью. Кадмий
+                            красный встречается с титановыми белилами на влажной фактуре Torchon.</p>
+                        <button
+                            class="text-xs uppercase tracking-[0.2em] border-b border-border hover:border-white transition-colors pb-1 text-white">Изучить
+                            работу</button>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center reveal-scale">
-                    <div class="lg:col-span-4 lg:pr-12 order-2 lg:order-1 text-right">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center reveal-scale">
+                    <div class="lg:col-span-4 order-2 lg:order-1 text-left lg:text-right">
                         <p class="text-wc2 text-sm font-mono mb-4">02 // 2026</p>
-                        <h3 class="font-display text-4xl mb-4">Абсолютный Кобальт</h3>
-                        <p class="text-muted mb-6 font-light">Сложная архитектура синих оттенков. Использование
-                            резерважа для сохранения чистейших белых участков хлопковой бумаги.</p>
-                        <a href="#"
-                            class="text-xs uppercase tracking-[0.2em] border-b border-border hover:border-white transition-colors pb-1">Изучить
-                            работу</a>
+                        <h3 class="font-display text-4xl mb-4 text-white">Абсолютный Кобальт</h3>
+                        <p class="text-gray-400 mb-6 font-light leading-relaxed">Сложная архитектура синих оттенков.
+                            Использование резерважа для сохранения чистейших белых участков бумаги.</p>
+                        <button
+                            class="text-xs uppercase tracking-[0.2em] border-b border-border hover:border-white transition-colors pb-1 text-white">Изучить
+                            работу</button>
                     </div>
                     <div
-                        class="lg:col-span-8 h-[70vh] rounded-2xl overflow-hidden group relative cursor-pointer order-1 lg:order-2">
-                        <div
-                            class="absolute inset-0 art-canvas bg-gradient-to-tl from-[#00c6ff] to-[#0072ff] art-zoom duration-1000">
-                        </div>
-                        <div class="absolute inset-0 glass-overlay transition-colors duration-500"></div>
+                        class="lg:col-span-8 h-[70vh] rounded-2xl overflow-hidden group relative cursor-pointer order-1 lg:order-2 glass p-2">
+                        <img src="https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&q=80&w=1600"
+                            class="w-full h-full object-cover rounded-xl art-img">
                     </div>
                 </div>
-
             </div>
         </div>
     </section>
@@ -418,42 +377,40 @@
     <section class="py-40 relative z-10 flex justify-center text-center overflow-hidden">
         <div class="absolute inset-0 bg-wc3/5"></div>
         <div class="max-w-4xl mx-auto px-6 reveal relative z-10">
-            <svg class="w-12 h-12 mx-auto mb-8 text-white/20" fill="currentColor" viewBox="0 0 24 24">
-                <path
-                    d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
-            </svg>
-            <h2 class="font-display text-4xl md:text-6xl italic text-white mb-10 leading-snug">
+            <h2 class="font-display text-4xl md:text-5xl italic text-white mb-10 leading-snug">
                 "Акварель не прощает ошибок, но щедро вознаграждает за смелость."
             </h2>
-            <button
-                onclick="document.getElementById('loginModal').classList.remove('hidden'); document.getElementById('loginModal').classList.add('flex'); setTimeout(() => { document.getElementById('loginBox').classList.remove('translate-y-10', 'opacity-0') }, 10);"
-                class="bg-white text-black px-10 py-4 rounded-full font-medium tracking-widest uppercase hover:scale-105 hover:shadow-[0_0_40px_rgba(255,255,255,0.3)] transition-all duration-300">
+            <button onclick="openLoginModal()"
+                class="bg-white text-black px-10 py-4 rounded-full font-medium tracking-widest uppercase hover:scale-105 hover:bg-gray-200 transition-all duration-300">
                 Стать резидентом
             </button>
         </div>
     </section>
 
-    <footer class="border-t border-border/50 py-12 relative z-10 bg-background">
+    <footer class="border-t border-border/50 py-12 relative z-10 bg-[#020203]">
         <div class="max-w-[1600px] mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
-            <div class="font-display text-xl tracking-[0.3em] uppercase text-white/50">Aquarelle</div>
+            <div class="font-display text-xl tracking-[0.3em] uppercase text-white/50 flex items-center gap-2">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" fill="currentColor" />
+                </svg>
+                Aquarelle
+            </div>
             <div class="text-xs text-muted font-light tracking-widest uppercase flex gap-8">
-                <a href="#" class="hover:text-white transition-colors">Instagram</a>
-                <a href="#" class="hover:text-white transition-colors">Behance</a>
-                <a href="#" class="hover:text-white transition-colors">Условия</a>
+                <button onclick="openTermsModal()" class="hover:text-white transition-colors cursor-none">Условия и
+                    Правила</button>
             </div>
             <div class="text-xs text-muted font-light">
-                &copy; 2026 Aquarelle Gallery. Искусство кода.
+                &copy; 2026 Aquarelle Gallery.
             </div>
         </div>
     </footer>
 
-    <div class="hidden fixed inset-0 z-[100000] items-center justify-center bg-black/60 backdrop-blur-2xl transition-opacity"
+    <div class="hidden fixed inset-0 z-[100000] items-center justify-center bg-black/80 backdrop-blur-md transition-opacity"
         id="loginModal">
-        <div class="absolute inset-0 cursor-pointer" onclick="closeModal()"></div>
+        <div class="absolute inset-0" onclick="closeLoginModal()"></div>
 
-        <div class="relative w-full max-w-md p-10 glass rounded-3xl border border-white/10 shadow-2xl transform translate-y-10 opacity-0 transition-all duration-500 ease-expo"
+        <div class="relative w-full max-w-md p-10 glass !bg-[#0a0a0f]/90 rounded-3xl border border-white/10 shadow-2xl transform translate-y-10 opacity-0 transition-all duration-500 ease-expo"
             id="loginBox">
-
             <div class="text-center mb-10">
                 <h2 class="font-display text-4xl text-white mb-2">Авторизация</h2>
                 <p class="text-sm text-muted">Доступ к личной студии</p>
@@ -461,21 +418,21 @@
 
             <form id="loginForm" class="space-y-6">
                 <div class="space-y-2 text-left">
-                    <label class="text-xs uppercase tracking-widest text-muted/80 ml-1">Логин автора</label>
+                    <label class="text-xs uppercase tracking-widest text-muted ml-1">Логин автора</label>
                     <input type="text" id="username" required autocomplete="off"
-                        class="w-full bg-black/40 border border-border rounded-xl px-5 py-4 text-white placeholder-white/20 focus:outline-none focus:border-wc1 focus:ring-1 focus:ring-wc1 transition-all font-sans"
+                        class="w-full bg-black/50 border border-border rounded-xl px-5 py-4 text-white placeholder-white/20 focus:outline-none focus:border-wc1 focus:ring-1 focus:ring-wc1 transition-all"
                         placeholder="Ваш логин">
                 </div>
 
                 <div class="space-y-2 text-left">
-                    <label class="text-xs uppercase tracking-widest text-muted/80 ml-1">Пароль</label>
+                    <label class="text-xs uppercase tracking-widest text-muted ml-1">Пароль</label>
                     <input type="password" id="password" required
-                        class="w-full bg-black/40 border border-border rounded-xl px-5 py-4 text-white placeholder-white/20 focus:outline-none focus:border-wc1 focus:ring-1 focus:ring-wc1 transition-all font-sans"
+                        class="w-full bg-black/50 border border-border rounded-xl px-5 py-4 text-white placeholder-white/20 focus:outline-none focus:border-wc1 focus:ring-1 focus:ring-wc1 transition-all"
                         placeholder="••••••••">
                 </div>
 
                 <button type="submit"
-                    class="w-full bg-white text-black font-medium tracking-widest uppercase py-4 rounded-xl hover:bg-gray-200 active:scale-[0.98] transition-all mt-4 shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+                    class="w-full bg-white text-black font-medium tracking-widest uppercase py-4 rounded-xl hover:bg-gray-200 transition-all mt-4">
                     Войти в систему
                 </button>
 
@@ -486,9 +443,47 @@
             </form>
 
             <button class="absolute top-6 right-6 text-white/30 hover:text-white transition-colors"
-                onclick="closeModal()">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                onclick="closeLoginModal()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 6 6 18" />
+                    <path d="m6 6 12 12" />
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <div class="hidden fixed inset-0 z-[100000] items-center justify-center bg-black/80 backdrop-blur-md transition-opacity p-4"
+        id="termsModal">
+        <div class="absolute inset-0" onclick="closeTermsModal()"></div>
+
+        <div class="relative w-full max-w-2xl p-10 glass !bg-[#0a0a0f]/90 rounded-3xl border border-white/10 shadow-2xl transform translate-y-10 opacity-0 transition-all duration-500 ease-expo max-h-[80vh] flex flex-col"
+            id="termsBox">
+
+            <h2 class="font-display text-4xl text-white mb-6 text-center shrink-0">Условия Резиденции</h2>
+
+            <div class="overflow-y-auto pr-4 space-y-4 text-gray-300 text-sm font-light leading-relaxed custom-scroll">
+                <p><strong class="text-white">1. Общие положения:</strong> Доступ к цифровой галерее Aquarelle
+                    предоставляется исключительно верифицированным авторам и кураторам. Передача учетных данных третьим
+                    лицам строго запрещена.</p>
+                <p><strong class="text-white">2. Авторские права:</strong> Все загруженные в систему материалы,
+                    изображения и текстуры остаются интеллектуальной собственностью их авторов. Платформа не имеет права
+                    использовать их в коммерческих целях без явного согласия.</p>
+                <p><strong class="text-white">3. Качество контента:</strong> Галерея придерживается строгих визуальных
+                    стандартов (Canvas Design System). Работы низкого разрешения или нарушающие эстетический код
+                    пространства могут быть скрыты кураторами.</p>
+                <p><strong class="text-white">4. Технические требования:</strong> Принимаются оцифрованные работы в
+                    цветовом пространстве sRGB. Размер файла не должен превышать 50MB.</p>
+            </div>
+
+            <button
+                class="mt-8 shrink-0 w-full bg-white/10 text-white border border-white/20 font-medium tracking-widest uppercase py-4 rounded-xl hover:bg-white/20 transition-all"
+                onclick="closeTermsModal()">
+                Понятно
+            </button>
+
+            <button class="absolute top-6 right-6 text-white/30 hover:text-white transition-colors"
+                onclick="closeTermsModal()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M18 6 6 18" />
                     <path d="m6 6 12 12" />
                 </svg>
@@ -497,127 +492,107 @@
     </div>
 
     <script>
-        // --- ПРЕЛОАДЕР ---
+        // Прелоадер
         window.addEventListener('load', () => {
             const preloader = document.getElementById('preloader');
             setTimeout(() => {
                 preloader.style.opacity = '0';
-                setTimeout(() => {
-                    preloader.style.display = 'none';
-                    document.body.classList.remove('overflow-hidden');
-                }, 1000);
-            }, 800); // Имитация загрузки "тяжелых" картин
+                setTimeout(() => { preloader.style.display = 'none'; }, 1000);
+            }, 500);
         });
 
-        // --- КАСТОМНЫЙ КУРСОР ---
+        // Курсор
         const cursorDot = document.getElementById('cursor-dot');
         const cursorBlur = document.getElementById('cursor-blur');
+        let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+        let dotX = mouseX, dotY = mouseY, blurX = mouseX, blurY = mouseY;
 
-        let mouseX = window.innerWidth / 2;
-        let mouseY = window.innerHeight / 2;
-        let dotX = mouseX, dotY = mouseY;
-        let blurX = mouseX, blurY = mouseY;
-
-        // Плавное следование
         function animateCursor() {
-            dotX += (mouseX - dotX) * 0.2;
-            dotY += (mouseY - dotY) * 0.2;
-            blurX += (mouseX - blurX) * 0.08;
-            blurY += (mouseY - blurY) * 0.08;
-
-            cursorDot.style.left = dotX + 'px';
-            cursorDot.style.top = dotY + 'px';
-            cursorBlur.style.left = blurX + 'px';
-            cursorBlur.style.top = blurY + 'px';
-
+            dotX += (mouseX - dotX) * 0.2; dotY += (mouseY - dotY) * 0.2;
+            blurX += (mouseX - blurX) * 0.08; blurY += (mouseY - blurY) * 0.08;
+            cursorDot.style.left = dotX + 'px'; cursorDot.style.top = dotY + 'px';
+            cursorBlur.style.left = blurX + 'px'; cursorBlur.style.top = blurY + 'px';
             requestAnimationFrame(animateCursor);
         }
         animateCursor();
 
         document.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-
-            // Параллакс для фоновых пятен (Canvas Design Style)
-            const xOffset = (mouseX / window.innerWidth - 0.5) * 40;
-            const yOffset = (mouseY / window.innerHeight - 0.5) * 40;
-
+            mouseX = e.clientX; mouseY = e.clientY;
+            // Параллакс фона
+            const xOffset = (mouseX / window.innerWidth - 0.5) * 30;
+            const yOffset = (mouseY / window.innerHeight - 0.5) * 30;
             document.getElementById('blob1').style.transform = `translate(${xOffset}px, ${yOffset}px)`;
-            document.getElementById('blob2').style.transform = `translate(${-xOffset * 1.5}px, ${-yOffset * 1.5}px)`;
+            document.getElementById('blob2').style.transform = `translate(${-xOffset}px, ${-yOffset}px)`;
             document.getElementById('blob3').style.transform = `translate(${xOffset * 0.5}px, ${-yOffset}px)`;
-            document.getElementById('blob4').style.transform = `translate(${-xOffset}px, ${yOffset * 2}px)`;
         });
 
-        // Эффекты курсора при наведении на кликабельные элементы
-        const interactives = document.querySelectorAll('a, button, input');
-        interactives.forEach(el => {
+        document.querySelectorAll('a, button, input').forEach(el => {
             el.addEventListener('mouseenter', () => {
-                cursorBlur.style.width = '60px';
-                cursorBlur.style.height = '60px';
+                cursorBlur.style.width = '60px'; cursorBlur.style.height = '60px';
                 cursorBlur.style.backgroundColor = 'rgba(255,255,255,0.1)';
             });
             el.addEventListener('mouseleave', () => {
-                cursorBlur.style.width = '40px';
-                cursorBlur.style.height = '40px';
+                cursorBlur.style.width = '40px'; cursorBlur.style.height = '40px';
                 cursorBlur.style.backgroundColor = 'transparent';
             });
         });
 
-        // --- АНИМАЦИЯ ПОЯВЛЕНИЯ (SCROLL REVEAL) ---
-        const observerOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.15
-        };
-
-        const observer = new IntersectionObserver((entries, observer) => {
+        // Скролл-анимации
+        const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                    // observer.unobserve(entry.target); // Закомментировано, чтобы анимация повторялась (по желанию можно раскомментировать)
-                }
+                if (entry.isIntersecting) entry.target.classList.add('active');
             });
-        }, observerOptions);
+        }, { threshold: 0.15 });
+        document.querySelectorAll('.reveal, .reveal-scale').forEach((el) => observer.observe(el));
 
-        document.querySelectorAll('.reveal, .reveal-scale').forEach((el) => {
-            observer.observe(el);
-        });
-
-        // --- УПРАВЛЕНИЕ МОДАЛЬНЫМ ОКНОМ ---
-        function closeModal() {
+        // Модалка Логина
+        function openLoginModal() {
             const modal = document.getElementById('loginModal');
+            modal.classList.remove('hidden'); modal.classList.add('flex');
+            setTimeout(() => { document.getElementById('loginBox').classList.remove('translate-y-10', 'opacity-0') }, 10);
+        }
+        function closeLoginModal() {
             const box = document.getElementById('loginBox');
-            box.classList.remove('translate-y-0', 'opacity-100');
             box.classList.add('translate-y-10', 'opacity-0');
-
             setTimeout(() => {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-                document.getElementById('error-msg').style.display = 'none'; // Сброс ошибки
-                document.getElementById('loginForm').reset(); // Сброс формы
-            }, 300); // Ждем окончания анимации
+                document.getElementById('loginModal').classList.add('hidden');
+                document.getElementById('loginModal').classList.remove('flex');
+                document.getElementById('error-msg').style.display = 'none';
+                document.getElementById('loginForm').reset();
+            }, 300);
         }
 
-        // Эффект блюра шапки при скролле
+        // Модалка Условий
+        function openTermsModal() {
+            const modal = document.getElementById('termsModal');
+            modal.classList.remove('hidden'); modal.classList.add('flex');
+            setTimeout(() => { document.getElementById('termsBox').classList.remove('translate-y-10', 'opacity-0') }, 10);
+        }
+        function closeTermsModal() {
+            const box = document.getElementById('termsBox');
+            box.classList.add('translate-y-10', 'opacity-0');
+            setTimeout(() => {
+                document.getElementById('termsModal').classList.add('hidden');
+                document.getElementById('termsModal').classList.remove('flex');
+            }, 300);
+        }
+
+        // Блюр шапки
         window.addEventListener('scroll', () => {
             const nav = document.getElementById('navbar');
-            if (window.scrollY > 50) {
-                nav.classList.add('bg-background/80', 'backdrop-blur-md', 'border-b', 'border-border');
-            } else {
-                nav.classList.remove('bg-background/80', 'backdrop-blur-md', 'border-b', 'border-border');
-            }
+            if (window.scrollY > 50) nav.classList.add('bg-background/90', 'backdrop-blur-md', 'border-b', 'border-white/5');
+            else nav.classList.remove('bg-background/90', 'backdrop-blur-md', 'border-b', 'border-white/5');
         });
 
-        // --- ТВОЙ ОРИГИНАЛЬНЫЙ СКРИПТ ВХОДА (БЕЗ ИЗМЕНЕНИЙ ЛОГИКИ) ---
+        // Отправка формы (Оригинал)
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const u = document.getElementById('username').value;
             const p = document.getElementById('password').value;
             const errorMsg = document.getElementById('error-msg');
-
-            // Анимация кнопки при отправке
             const btn = e.target.querySelector('button[type="submit"]');
             const originalText = btn.innerText;
+
             btn.innerText = 'Проверка...';
             btn.style.opacity = '0.7';
 
@@ -629,10 +604,9 @@
                 });
 
                 if (res.ok) {
-                    window.location.href = '/index.html'; // Redirect to real games site
+                    window.location.href = '/index.html';
                 } else {
                     errorMsg.style.display = 'block';
-                    // Добавляем эффект тряски при ошибке
                     const box = document.getElementById('loginBox');
                     box.style.transform = 'translateX(-10px)';
                     setTimeout(() => box.style.transform = 'translateX(10px)', 50);
