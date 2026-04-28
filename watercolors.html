@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Акварельные пейзажи и вдохновение</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #5f9ea0;
+            --secondary: #ffb6c1;
+            --bg: #fafafa;
+            --text: #333;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        /* Watercolor Background Effect */
+        .watercolor-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 15% 50%, rgba(95, 158, 160, 0.4), transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(255, 182, 193, 0.4), transparent 50%),
+                radial-gradient(circle at 50% 80%, rgba(173, 216, 230, 0.4), transparent 50%);
+            filter: blur(40px);
+            opacity: 0.8;
+        }
+
+        header {
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        p.subtitle {
+            font-size: 1.2rem;
+            color: #555;
+            font-weight: 300;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .art-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .art-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .art-img {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            opacity: 0.8;
+        }
+        
+        .art-img.two { background: linear-gradient(120deg, #f6d365 0%, #fda085 100%); }
+        .art-img.three { background: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%); }
+
+        .art-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin: 0 0 10px 0;
+        }
+
+        /* Login Button & Modal */
+        .login-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: transparent;
+            border: 1px solid rgba(0,0,0,0.1);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            color: #555;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn:hover {
+            background: rgba(0,0,0,0.05);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            width: 300px;
+            text-align: center;
+        }
+
+        .login-box h2 {
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .input-group input:focus {
+            border-color: var(--primary);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Montserrat', sans-serif;
+            transition: background 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: #4a7d7f;
+        }
+        
+        #error-msg {
+            color: red;
+            font-size: 0.85rem;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="watercolor-bg"></div>
+
+    <button class="login-btn" onclick="document.getElementById('loginModal').classList.add('active')">Войти</button>
+
+    <header>
+        <h1>Искусство Акварели</h1>
+        <p class="subtitle">Погрузитесь в мир прозрачных красок и легких мазков</p>
+    </header>
+
+    <div class="gallery">
+        <div class="art-card">
+            <div class="art-img one"></div>
+            <h3 class="art-title">Весенний рассвет</h3>
+            <p>Техника по сырому. Мягкие переходы фиолетовых и синих оттенков.</p>
+        </div>
+        <div class="art-card">
+            <div class="art-img two"></div>
+            <h3 class="art-title">Осенний натюрморт</h3>
+            <p>Теплые тона охры и кадмия создают уютную атмосферу.</p>
+        </div>
+        <div class="art-card">
+            <div class="art-img three"></div>
+            <h3 class="art-title">Морской бриз</h3>
+            <p>Легкость и прозрачность воды передана тонкими слоями лазури.</p>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="login-box">
+            <h2>Вход для авторов</h2>
+            <form id="loginForm">
+                <div class="input-group">
+                    <label>Логин</label>
+                    <input type="text" id="username" required autocomplete="off">
+                </div>
+                <div class="input-group">
+                    <label>Пароль</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit" class="submit-btn">Войти</button>
+                <div id="error-msg">Неверный логин или пароль</div>
+            </form>
+            <button style="margin-top: 15px; background: none; border: none; color: #999; cursor: pointer; text-decoration: underline;" onclick="document.getElementById('loginModal').classList.remove('active')">Закрыть</button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const u = document.getElementById('username').value;
+            const p = document.getElementById('password').value;
+
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: u, password: p })
+                });
+
+                if (res.ok) {
+                    window.location.href = '/index.html'; // Redirect to real games site
+                } else {
+                    document.getElementById('error-msg').style.display = 'block';
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        });
+    </script>
+</body>
+</html>

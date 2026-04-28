@@ -1,0 +1,27 @@
+{
+  "name": "aqulroa-games",
+  "version": "1.0.0",
+  "description": "This project is a high-fidelity, physics-based 3D web clone of \"Clustertruck\" built with Three.js and Cannon.js.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aqulroa/aqulroa-games.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/aqulroa/aqulroa-games/issues"
+  },
+  "homepage": "https://github.com/aqulroa/aqulroa-games#readme",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "sqlite3": "^6.0.1"
+  }
+}
