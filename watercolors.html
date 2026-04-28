@@ -1,427 +1,625 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" class="dark scroll-smooth">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Акварельные пейзажи | Вдохновение и Цвет</title>
+    <title>A Q U A R E L L E | Музей современного искусства</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400;1,600&family=Inter:wght@200;300;400;500;600&display=swap"
         rel="stylesheet">
-    <style>
-        :root {
-            --primary: #5f9ea0;
-            --accent: #ffb6c1;
-            --bg: #fcfcfc;
-            --text-dark: #2c3e50;
-            --text-light: #555;
-            --glass: rgba(255, 255, 255, 0.5);
-            --border: rgba(255, 255, 255, 0.3);
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        background: '#050507',
+                        surface: 'rgba(15, 15, 20, 0.6)',
+                        border: 'rgba(255, 255, 255, 0.1)',
+                        foreground: '#ffffff',
+                        muted: '#8a8a93',
+                        wc1: '#ff7eb3', // Pink watercolor
+                        wc2: '#8fd3f4', // Blue watercolor
+                        wc3: '#d8b5ff', // Purple watercolor
+                        wc4: '#fdfa72', // Yellow watercolor
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Cormorant Garamond', 'serif'],
+                    },
+                    transitionTimingFunction: {
+                        'expo': 'cubic-bezier(0.19, 1, 0.22, 1)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .glass {
+                @apply bg-surface backdrop-blur-xl border border-border;
+            }
+            .text-outline {
+                -webkit-text-stroke: 1px rgba(255,255,255,0.2);
+                color: transparent;
+            }
         }
 
-        body,
-        html {
-            margin: 0;
-            padding: 0;
-            font-family: 'Montserrat', sans-serif;
-            background-color: var(--bg);
-            color: var(--text-dark);
+        /* --- БАЗА И СКРОЛЛБАР --- */
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.foreground');
             overflow-x: hidden;
-            scroll-behavior: smooth;
+            cursor: none; /* Скрываем стандартный курсор для кастомного */
+        }
+        
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #050507;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
         }
 
-        /* Мега-крутой акварельный фон */
-        .watercolor-bg {
+        /* --- КАСТОМНЫЙ КУРСОР --- */
+        #cursor-dot, #cursor-blur {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
+            top: 0; left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+        #cursor-dot {
+            width: 6px; height: 6px;
+            background-color: white;
+            transition: width 0.2s, height 0.2s;
+        }
+        #cursor-blur {
+            width: 40px; height: 40px;
+            border: 1px solid rgba(255,255,255,0.3);
+            transition: transform 0.1s ease-out, width 0.2s, height 0.2s, background-color 0.2s;
+        }
+        body:hover #cursor-dot { width: 8px; height: 8px; }
+
+        /* --- АКВАРЕЛЬНЫЕ ПЯТНА (ЖИВОЙ ФОН) --- */
+        .ambient-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
             z-index: -1;
-            background:
-                radial-gradient(circle at 10% 20%, rgba(95, 158, 160, 0.3), transparent 40%),
-                radial-gradient(circle at 80% 10%, rgba(255, 182, 193, 0.3), transparent 40%),
-                radial-gradient(circle at 50% 80%, rgba(173, 216, 230, 0.3), transparent 50%),
-                radial-gradient(circle at 85% 85%, rgba(255, 218, 185, 0.2), transparent 40%);
-            filter: blur(50px);
-            opacity: 0.9;
-            animation: bgPulse 20s infinite alternate linear;
-        }
-
-        @keyframes bgPulse {
-            0% {
-                transform: scale(1) translate(0, 0);
-            }
-
-            100% {
-                transform: scale(1.1) translate(-2%, -2%);
-            }
-        }
-
-        /* Кнопка входа (скрытая эстетика) */
-        .login-btn {
-            position: absolute;
-            top: 30px;
-            right: 40px;
-            background: var(--glass);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid var(--border);
-            padding: 10px 25px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.9rem;
-            color: var(--text-dark);
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-            z-index: 10;
-        }
-
-        .login-btn:hover {
-            background: rgba(255, 255, 255, 0.8);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Хедер */
-        header {
-            padding: 100px 20px 60px;
-            text-align: center;
-            animation: fadeInDown 1s ease-out;
-        }
-
-        h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(3rem, 8vw, 5rem);
-            /* Адаптивный размер */
-            color: #1a252f;
-            margin: 0 0 20px 0;
-            font-weight: 700;
-            letter-spacing: -1px;
-        }
-
-        h1 span {
-            font-weight: 400;
-            font-style: italic;
-            color: var(--primary);
-        }
-
-        p.subtitle {
-            font-size: clamp(1rem, 2.5vw, 1.4rem);
-            color: var(--text-light);
-            font-weight: 300;
-            max-width: 700px;
-            margin: 0 auto;
-            line-height: 1.6;
-        }
-
-        /* Галерея */
-        .gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 40px;
-            padding: 40px;
-            max-width: 1400px;
-            margin: 0 auto 100px;
-        }
-
-        /* Карточки в стиле Glassmorphism */
-        .art-card {
-            background: var(--glass);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            padding: 30px;
-            border-radius: 20px;
-            border: 1px solid var(--border);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
-            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-            opacity: 0;
-            animation: fadeInUp 0.8s ease-out forwards;
-        }
-
-        .art-card:nth-child(1) {
-            animation-delay: 0.2s;
-        }
-
-        .art-card:nth-child(2) {
-            animation-delay: 0.4s;
-        }
-
-        .art-card:nth-child(3) {
-            animation-delay: 0.6s;
-        }
-
-        .art-card:hover {
-            transform: translateY(-15px) scale(1.02);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
-            background: rgba(255, 255, 255, 0.7);
-        }
-
-        /* Имитация акварельных рисунков градиентами */
-        .art-img {
-            width: 100%;
-            height: 300px;
-            border-radius: 15px;
-            margin-bottom: 25px;
-            position: relative;
             overflow: hidden;
-            box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.05);
+            background: #050507;
+            pointer-events: none;
+        }
+        
+        .watercolor-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.6;
+            mix-blend-mode: screen;
+            animation: breathe 20s infinite alternate ease-in-out;
+            transition: transform 0.3s ease-out; /* Для параллакса от мыши */
         }
 
-        /* Разные акварельные абстракции */
-        .art-img.one {
-            background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
-            background-size: 200% 200%;
-            animation: gradientMove 10s infinite alternate;
+        .blob-1 { width: 50vw; height: 50vw; background: theme('colors.wc1'); top: -10%; left: -10%; animation-delay: 0s; }
+        .blob-2 { width: 60vw; height: 60vw; background: theme('colors.wc2'); bottom: -20%; right: -10%; animation-delay: -5s; }
+        .blob-3 { width: 40vw; height: 40vw; background: theme('colors.wc3'); top: 30%; left: 30%; animation-delay: -10s; }
+        .blob-4 { width: 45vw; height: 45vw; background: theme('colors.wc4'); top: -20%; right: 20%; filter: blur(150px); animation-delay: -15s; opacity: 0.4;}
+
+        @keyframes breathe {
+            0% { transform: scale(1) translate(0, 0) rotate(0deg); }
+            50% { transform: scale(1.1) translate(5%, 5%) rotate(10deg); }
+            100% { transform: scale(0.9) translate(-5%, -5%) rotate(-10deg); }
         }
 
-        .art-img.two {
-            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
-            background-size: 200% 200%;
-            animation: gradientMove 12s infinite alternate-reverse;
-        }
-
-        .art-img.three {
-            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
-            background-size: 200% 200%;
-            animation: gradientMove 8s infinite alternate;
-        }
-
-        @keyframes gradientMove {
-            0% {
-                background-position: 0% 50%;
-            }
-
-            100% {
-                background-position: 100% 50%;
-            }
-        }
-
-        .art-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 2rem;
-            font-weight: 700;
-            margin: 0 0 15px 0;
-            color: #1a252f;
-        }
-
-        .art-card p {
-            font-size: 1rem;
-            line-height: 1.7;
-            color: var(--text-light);
-            margin: 0;
-            font-weight: 300;
-        }
-
-        /* Модальное окно (полный передел) */
-        .modal {
-            display: none;
+        /* --- ПРЕЛОАДЕР --- */
+        #preloader {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            z-index: 100;
+            inset: 0;
+            background: #050507;
+            z-index: 10000;
+            display: flex;
             justify-content: center;
             align-items: center;
-            opacity: 0;
-            transition: opacity 0.4s ease;
+            transition: opacity 1s ease-out;
         }
-
-        .modal.active {
-            display: flex;
-            opacity: 1;
-        }
-
-        .login-box {
-            background: white;
-            padding: 60px 50px;
-            border-radius: 30px;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-            transform: scale(0.9) translateY(20px);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .modal.active .login-box {
-            transform: scale(1) translateY(0);
-        }
-
-        .login-box h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.5rem;
-            margin: 0 0 40px 0;
-            color: var(--text-dark);
-        }
-
-        .input-group {
-            margin-bottom: 25px;
-            text-align: left;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--text-light);
-            padding-left: 5px;
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 15px 20px;
-            border: 1px solid #eee;
-            border-radius: 15px;
-            outline: none;
-            box-sizing: border-box;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1rem;
-            background-color: #fafafa;
-            transition: all 0.3s ease;
-        }
-
-        .input-group input:focus {
-            border-color: var(--primary);
-            background-color: white;
-            box-shadow: 0 0 10px rgba(95, 158, 160, 0.1);
-        }
-
-        .submit-btn {
-            width: 100%;
-            padding: 18px;
-            background-color: var(--text-dark);
+        .loader-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            letter-spacing: 0.5em;
             color: white;
-            border: none;
-            border-radius: 15px;
-            cursor: pointer;
-            font-weight: 600;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            margin-top: 15px;
+            animation: pulse 2s infinite;
         }
 
-        .submit-btn:hover {
-            background-color: var(--primary);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(95, 158, 160, 0.3);
+        /* --- АНИМАЦИИ ПОЯВЛЕНИЯ ПРИ СКРОЛЛЕ --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(60px);
+            transition: all 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .reveal-delay-1 { transition-delay: 0.2s; }
+        .reveal-delay-2 { transition-delay: 0.4s; }
+        .reveal-delay-3 { transition-delay: 0.6s; }
+
+        .reveal-scale {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 1.5s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        .reveal-scale.active {
+            opacity: 1;
+            transform: scale(1);
         }
 
-        #error-msg {
-            color: #e74c3c;
-            font-size: 0.9rem;
-            margin-top: 15px;
-            display: none;
-            font-weight: 400;
+        /* --- ИМИТАЦИЯ КАРТИН (ШУМ + ГРАДИЕНТ) --- */
+        .art-canvas {
+            position: relative;
+            overflow: hidden;
+            background-color: #111;
+        }
+        .art-canvas::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E");
+            mix-blend-mode: overlay;
+            z-index: 2;
+            pointer-events: none;
+        }
+        .art-paint-1 { background: radial-gradient(circle at 30% 70%, #ff7eb3 0%, transparent 60%), radial-gradient(circle at 70% 30%, #8fd3f4 0%, transparent 60%); }
+        .art-paint-2 { background: linear-gradient(45deg, #12c2e9, #c471ed, #f64f59); }
+        .art-paint-3 { background: radial-gradient(circle at 50% 50%, #d8b5ff 0%, #111 80%); }
+        .art-paint-4 { background: linear-gradient(to right, #43e97b 0%, #38f9d7 100%); }
+
+        /* Ховер эффекты для карточек */
+        .group:hover .art-zoom {
+            transform: scale(1.05);
+        }
+        .group:hover .glass-overlay {
+            background: rgba(255,255,255,0.05);
         }
 
-        .close-modal-btn {
-            margin-top: 25px;
-            background: none;
-            border: none;
-            color: #bbb;
-            cursor: pointer;
-            text-decoration: underline;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.9rem;
-            transition: color 0.3s ease;
-        }
-
-        .close-modal-btn:hover {
-            color: var(--text-dark);
-        }
-
-        /* Анимации */
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(40px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        /* Линии сетки на фоне */
+        .grid-bg {
+            background-size: 50px 50px;
+            background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
         }
     </style>
 </head>
 
-<body>
+<body class="antialiased font-sans selection:bg-wc1 selection:text-white">
 
-    <div class="watercolor-bg"></div>
-
-    <button class="login-btn" onclick="document.getElementById('loginModal').classList.add('active')">Личный
-        кабинет</button>
-
-    <header>
-        <h1><span>Мир</span> Акварели</h1>
-        <p class="subtitle">Погрузитесь в изящество прозрачных красок, легкость мазков и вдохновение, застывшее на
-            бумаге.</p>
-    </header>
-
-    <div class="gallery">
-        <div class="art-card">
-            <div class="art-img one"></div>
-            <h3 class="art-title">Весенний рассвет</h3>
-            <p>Экспериментальная техника «по-сырому». Мягкие переходы фиолетовых и небесных оттенков передают свежесть
-                утра.</p>
-        </div>
-        <div class="art-card">
-            <div class="art-img two"></div>
-            <h3 class="art-title">Золотая осень</h3>
-            <p>Теплые тона охры, сиены и кадмия создают уютную, почти осязаемую атмосферу осеннего леса.</p>
-        </div>
-        <div class="art-card">
-            <div class="art-img three"></div>
-            <h3 class="art-title">Морской бриз</h3>
-            <p>Легкость воды и динамика волн переданы тонкими лессировочными слоями ультрамарина и кобальта.</p>
-        </div>
+    <div id="preloader">
+        <div class="loader-text">AQUARELLE</div>
     </div>
 
-    <div class="modal" id="loginModal">
-        <div class="login-box">
-            <h2>Вход</h2>
-            <form id="loginForm">
-                <div class="input-group">
-                    <label>Логин автора</label>
-                    <input type="text" id="username" required autocomplete="off" placeholder="Ваш логин">
+    <div id="cursor-dot"></div>
+    <div id="cursor-blur"></div>
+
+    <div class="ambient-canvas">
+        <div class="grid-bg absolute inset-0 z-0"></div>
+        <div class="watercolor-blob blob-1" id="blob1"></div>
+        <div class="watercolor-blob blob-2" id="blob2"></div>
+        <div class="watercolor-blob blob-3" id="blob3"></div>
+        <div class="watercolor-blob blob-4" id="blob4"></div>
+    </div>
+
+    <nav class="fixed top-0 left-0 w-full z-50 transition-all duration-300" id="navbar">
+        <div class="max-w-[1600px] mx-auto px-6 py-6 flex justify-between items-center">
+            <div class="font-display text-2xl tracking-[0.2em] font-semibold text-white uppercase">
+                Aquarelle
+            </div>
+            <div class="flex items-center gap-8">
+                <a href="#philosophy"
+                    class="hidden md:block text-sm font-medium text-muted hover:text-white transition-colors tracking-widest uppercase">Философия</a>
+                <a href="#gallery"
+                    class="hidden md:block text-sm font-medium text-muted hover:text-white transition-colors tracking-widest uppercase">Экспозиция</a>
+                <button
+                    onclick="document.getElementById('loginModal').classList.remove('hidden'); document.getElementById('loginModal').classList.add('flex'); setTimeout(() => { document.getElementById('loginBox').classList.remove('translate-y-10', 'opacity-0') }, 10);"
+                    class="glass px-6 py-2 rounded-full text-sm font-medium tracking-widest uppercase hover:bg-white hover:text-black transition-all duration-300 hover:cursor-pointer"
+                    id="hover-btn">
+                    Войти
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <section class="relative h-screen flex flex-col justify-center items-center text-center px-4">
+        <div class="reveal active z-10 w-full max-w-7xl mx-auto">
+            <p class="text-wc2 font-medium tracking-[0.3em] uppercase text-sm mb-6 reveal-delay-1">Цифровая галерея</p>
+
+            <h1
+                class="font-display text-[15vw] md:text-[10rem] leading-none text-white tracking-tighter mb-4 select-none">
+                Искусство <br>
+                <span class="text-outline italic">Воды</span> & Цвета
+            </h1>
+
+            <p class="text-muted text-lg md:text-xl max-w-2xl mx-auto font-light leading-relaxed reveal-delay-2 mt-8">
+                Прозрачность, застывшая в пигменте. Мы исследуем границу между контролем и хаосом, создавая шедевры,
+                которые дышат на экране.
+            </p>
+
+            <div class="mt-16 reveal-delay-3">
+                <p class="text-xs text-muted uppercase tracking-[0.2em] mb-4">Скролльте для погружения</p>
+                <div class="w-[1px] h-24 bg-gradient-to-b from-white/50 to-transparent mx-auto"></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="philosophy" class="py-32 px-6 relative z-10">
+        <div class="max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+
+            <div class="lg:col-span-5 reveal">
+                <h2 class="font-display text-5xl md:text-7xl mb-8 leading-tight">
+                    Мыслящие <br>
+                    <span class="italic text-wc1">Кисти</span>
+                </h2>
+                <div class="space-y-6 text-muted font-light text-lg">
+                    <p>
+                        Акварель — это не просто краска. Это диалог художника с физикой жидкостей. Влажная бумага
+                        диктует свои условия, пигмент растекается по капиллярам, создавая формы, которые невозможно
+                        повторить дважды.
+                    </p>
+                    <p>
+                        В нашем музее мы отказались от визуального шума. Только чистый цвет, идеальные градиенты и
+                        архитектурная точность композиции. Текст здесь — лишь тихий акцент, главное слово берет визуал.
+                    </p>
                 </div>
-                <div class="input-group">
-                    <label>Пароль</label>
-                    <input type="password" id="password" required placeholder="••••••••">
+            </div>
+
+            <div class="lg:col-span-7 relative h-[600px] w-full reveal reveal-delay-1">
+                <div class="absolute inset-0 glass rounded-3xl overflow-hidden group">
+                    <div class="w-full h-full art-canvas art-paint-1 art-zoom transition-transform duration-[2s]"></div>
+                    <div class="absolute bottom-8 right-8 glass p-4 rounded-xl text-right">
+                        <p class="font-display italic text-2xl">A la Prima #01</p>
+                        <p class="text-xs uppercase tracking-widest text-muted mt-1">Техника по-сырому</p>
+                    </div>
                 </div>
-                <button type="submit" class="submit-btn">Открыть галерею</button>
-                <div id="error-msg">Ошибка доступа. Проверьте данные.</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 px-6 relative z-10">
+        <div class="max-w-[1600px] mx-auto">
+            <h2 class="font-display text-4xl mb-12 text-center reveal">Лексикон Акварели</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 auto-rows-[300px]">
+
+                <div class="md:col-span-2 lg:col-span-2 glass rounded-3xl overflow-hidden group relative reveal">
+                    <div
+                        class="absolute inset-0 art-canvas art-paint-2 art-zoom transition-transform duration-700 opacity-60">
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-background to-transparent opacity-80"></div>
+                    <div class="absolute bottom-0 left-0 p-8">
+                        <h3 class="font-display text-3xl mb-2">Лессировка</h3>
+                        <p class="text-sm text-muted max-w-sm">Многослойное нанесение тонких, полупрозрачных красок для
+                            достижения глубоких, сложных оттенков.</p>
+                    </div>
+                </div>
+
+                <div
+                    class="glass rounded-3xl overflow-hidden group relative reveal reveal-delay-1 flex items-center justify-center text-center p-8 border border-border/50 hover:border-wc1 transition-colors">
+                    <div
+                        class="absolute inset-0 bg-wc1/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    </div>
+                    <div class="relative z-10">
+                        <div
+                            class="w-16 h-16 rounded-full border border-wc1 mx-auto mb-6 flex items-center justify-center">
+                            <span class="text-wc1 font-light">01</span>
+                        </div>
+                        <h3 class="font-display text-2xl mb-2">Сухая кисть</h3>
+                        <p class="text-xs text-muted uppercase tracking-wider">Фактура и деталь</p>
+                    </div>
+                </div>
+
+                <div
+                    class="md:col-span-1 lg:col-span-1 row-span-2 glass rounded-3xl overflow-hidden group relative reveal reveal-delay-2">
+                    <div
+                        class="absolute inset-0 art-canvas art-paint-3 art-zoom transition-transform duration-700 opacity-50">
+                    </div>
+                    <div class="absolute inset-0 flex flex-col justify-between p-8">
+                        <div class="self-end text-xs tracking-widest text-muted uppercase">Глубина</div>
+                        <div>
+                            <h3 class="font-display text-4xl mb-4 italic">Грануляция</h3>
+                            <p class="text-sm text-gray-300">Оседание тяжелых частиц пигмента во впадинах бумаги,
+                                создающее невероятную текстуру звездного неба или камня.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="glass rounded-3xl overflow-hidden group relative reveal flex flex-col justify-center p-8 bg-white/5">
+                    <h3 class="font-display text-3xl mb-4">Смывка</h3>
+                    <p class="text-sm text-muted">Удаление пигмента влажной кистью для создания бликов или исправления
+                        ошибок.</p>
+                </div>
+
+                <div class="md:col-span-2 glass rounded-3xl overflow-hidden group relative reveal reveal-delay-1">
+                    <div
+                        class="absolute inset-0 art-canvas art-paint-4 art-zoom transition-transform duration-700 opacity-60">
+                    </div>
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <h2 class="font-display text-5xl font-semibold tracking-wide mix-blend-overlay">ГРАДИЕНТ</h2>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="gallery" class="py-32 px-6 relative z-10">
+        <div class="max-w-[1600px] mx-auto">
+            <div class="flex justify-between items-end mb-16 reveal">
+                <h2 class="font-display text-5xl md:text-7xl leading-none">Текущая<br>Экспозиция</h2>
+                <p class="hidden md:block text-muted max-w-sm text-right text-sm">Наведите на полотно, чтобы рассмотреть
+                    детали пигментации и фактуры бумаги.</p>
+            </div>
+
+            <div class="space-y-32">
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center reveal-scale">
+                    <div class="lg:col-span-8 h-[70vh] rounded-2xl overflow-hidden group relative cursor-pointer">
+                        <div
+                            class="absolute inset-0 art-canvas bg-gradient-to-br from-[#ff9a9e] to-[#fecfef] art-zoom duration-1000">
+                        </div>
+                        <div class="absolute inset-0 glass-overlay transition-colors duration-500"></div>
+                    </div>
+                    <div class="lg:col-span-4 lg:pl-12">
+                        <p class="text-wc1 text-sm font-mono mb-4">01 // 2026</p>
+                        <h3 class="font-display text-4xl mb-4">Розовый Туман</h3>
+                        <p class="text-muted mb-6 font-light">Эксперимент с плотностью. Кадмий красный встречается с
+                            титановыми белилами на влажной фактуре Torchon.</p>
+                        <a href="#"
+                            class="text-xs uppercase tracking-[0.2em] border-b border-border hover:border-white transition-colors pb-1">Изучить
+                            работу</a>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center reveal-scale">
+                    <div class="lg:col-span-4 lg:pr-12 order-2 lg:order-1 text-right">
+                        <p class="text-wc2 text-sm font-mono mb-4">02 // 2026</p>
+                        <h3 class="font-display text-4xl mb-4">Абсолютный Кобальт</h3>
+                        <p class="text-muted mb-6 font-light">Сложная архитектура синих оттенков. Использование
+                            резерважа для сохранения чистейших белых участков хлопковой бумаги.</p>
+                        <a href="#"
+                            class="text-xs uppercase tracking-[0.2em] border-b border-border hover:border-white transition-colors pb-1">Изучить
+                            работу</a>
+                    </div>
+                    <div
+                        class="lg:col-span-8 h-[70vh] rounded-2xl overflow-hidden group relative cursor-pointer order-1 lg:order-2">
+                        <div
+                            class="absolute inset-0 art-canvas bg-gradient-to-tl from-[#00c6ff] to-[#0072ff] art-zoom duration-1000">
+                        </div>
+                        <div class="absolute inset-0 glass-overlay transition-colors duration-500"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="py-40 relative z-10 flex justify-center text-center overflow-hidden">
+        <div class="absolute inset-0 bg-wc3/5"></div>
+        <div class="max-w-4xl mx-auto px-6 reveal relative z-10">
+            <svg class="w-12 h-12 mx-auto mb-8 text-white/20" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                    d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+            </svg>
+            <h2 class="font-display text-4xl md:text-6xl italic text-white mb-10 leading-snug">
+                "Акварель не прощает ошибок, но щедро вознаграждает за смелость."
+            </h2>
+            <button
+                onclick="document.getElementById('loginModal').classList.remove('hidden'); document.getElementById('loginModal').classList.add('flex'); setTimeout(() => { document.getElementById('loginBox').classList.remove('translate-y-10', 'opacity-0') }, 10);"
+                class="bg-white text-black px-10 py-4 rounded-full font-medium tracking-widest uppercase hover:scale-105 hover:shadow-[0_0_40px_rgba(255,255,255,0.3)] transition-all duration-300">
+                Стать резидентом
+            </button>
+        </div>
+    </section>
+
+    <footer class="border-t border-border/50 py-12 relative z-10 bg-background">
+        <div class="max-w-[1600px] mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="font-display text-xl tracking-[0.3em] uppercase text-white/50">Aquarelle</div>
+            <div class="text-xs text-muted font-light tracking-widest uppercase flex gap-8">
+                <a href="#" class="hover:text-white transition-colors">Instagram</a>
+                <a href="#" class="hover:text-white transition-colors">Behance</a>
+                <a href="#" class="hover:text-white transition-colors">Условия</a>
+            </div>
+            <div class="text-xs text-muted font-light">
+                &copy; 2026 Aquarelle Gallery. Искусство кода.
+            </div>
+        </div>
+    </footer>
+
+    <div class="hidden fixed inset-0 z-[100000] items-center justify-center bg-black/60 backdrop-blur-2xl transition-opacity"
+        id="loginModal">
+        <div class="absolute inset-0 cursor-pointer" onclick="closeModal()"></div>
+
+        <div class="relative w-full max-w-md p-10 glass rounded-3xl border border-white/10 shadow-2xl transform translate-y-10 opacity-0 transition-all duration-500 ease-expo"
+            id="loginBox">
+
+            <div class="text-center mb-10">
+                <h2 class="font-display text-4xl text-white mb-2">Авторизация</h2>
+                <p class="text-sm text-muted">Доступ к личной студии</p>
+            </div>
+
+            <form id="loginForm" class="space-y-6">
+                <div class="space-y-2 text-left">
+                    <label class="text-xs uppercase tracking-widest text-muted/80 ml-1">Логин автора</label>
+                    <input type="text" id="username" required autocomplete="off"
+                        class="w-full bg-black/40 border border-border rounded-xl px-5 py-4 text-white placeholder-white/20 focus:outline-none focus:border-wc1 focus:ring-1 focus:ring-wc1 transition-all font-sans"
+                        placeholder="Ваш логин">
+                </div>
+
+                <div class="space-y-2 text-left">
+                    <label class="text-xs uppercase tracking-widest text-muted/80 ml-1">Пароль</label>
+                    <input type="password" id="password" required
+                        class="w-full bg-black/40 border border-border rounded-xl px-5 py-4 text-white placeholder-white/20 focus:outline-none focus:border-wc1 focus:ring-1 focus:ring-wc1 transition-all font-sans"
+                        placeholder="••••••••">
+                </div>
+
+                <button type="submit"
+                    class="w-full bg-white text-black font-medium tracking-widest uppercase py-4 rounded-xl hover:bg-gray-200 active:scale-[0.98] transition-all mt-4 shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+                    Войти в систему
+                </button>
+
+                <div id="error-msg"
+                    class="text-wc1 text-sm text-center hidden mt-4 bg-wc1/10 py-3 rounded-lg border border-wc1/20">
+                    Ошибка доступа. Проверьте данные.
+                </div>
             </form>
-            <button class="close-modal-btn"
-                onclick="document.getElementById('loginModal').classList.remove('active')">Закрыть окно</button>
+
+            <button class="absolute top-6 right-6 text-white/30 hover:text-white transition-colors"
+                onclick="closeModal()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 6 6 18" />
+                    <path d="m6 6 12 12" />
+                </svg>
+            </button>
         </div>
     </div>
 
     <script>
+        // --- ПРЕЛОАДЕР ---
+        window.addEventListener('load', () => {
+            const preloader = document.getElementById('preloader');
+            setTimeout(() => {
+                preloader.style.opacity = '0';
+                setTimeout(() => {
+                    preloader.style.display = 'none';
+                    document.body.classList.remove('overflow-hidden');
+                }, 1000);
+            }, 800); // Имитация загрузки "тяжелых" картин
+        });
+
+        // --- КАСТОМНЫЙ КУРСОР ---
+        const cursorDot = document.getElementById('cursor-dot');
+        const cursorBlur = document.getElementById('cursor-blur');
+
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+        let dotX = mouseX, dotY = mouseY;
+        let blurX = mouseX, blurY = mouseY;
+
+        // Плавное следование
+        function animateCursor() {
+            dotX += (mouseX - dotX) * 0.2;
+            dotY += (mouseY - dotY) * 0.2;
+            blurX += (mouseX - blurX) * 0.08;
+            blurY += (mouseY - blurY) * 0.08;
+
+            cursorDot.style.left = dotX + 'px';
+            cursorDot.style.top = dotY + 'px';
+            cursorBlur.style.left = blurX + 'px';
+            cursorBlur.style.top = blurY + 'px';
+
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+
+            // Параллакс для фоновых пятен (Canvas Design Style)
+            const xOffset = (mouseX / window.innerWidth - 0.5) * 40;
+            const yOffset = (mouseY / window.innerHeight - 0.5) * 40;
+
+            document.getElementById('blob1').style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+            document.getElementById('blob2').style.transform = `translate(${-xOffset * 1.5}px, ${-yOffset * 1.5}px)`;
+            document.getElementById('blob3').style.transform = `translate(${xOffset * 0.5}px, ${-yOffset}px)`;
+            document.getElementById('blob4').style.transform = `translate(${-xOffset}px, ${yOffset * 2}px)`;
+        });
+
+        // Эффекты курсора при наведении на кликабельные элементы
+        const interactives = document.querySelectorAll('a, button, input');
+        interactives.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursorBlur.style.width = '60px';
+                cursorBlur.style.height = '60px';
+                cursorBlur.style.backgroundColor = 'rgba(255,255,255,0.1)';
+            });
+            el.addEventListener('mouseleave', () => {
+                cursorBlur.style.width = '40px';
+                cursorBlur.style.height = '40px';
+                cursorBlur.style.backgroundColor = 'transparent';
+            });
+        });
+
+        // --- АНИМАЦИЯ ПОЯВЛЕНИЯ (SCROLL REVEAL) ---
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.15
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    // observer.unobserve(entry.target); // Закомментировано, чтобы анимация повторялась (по желанию можно раскомментировать)
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal, .reveal-scale').forEach((el) => {
+            observer.observe(el);
+        });
+
+        // --- УПРАВЛЕНИЕ МОДАЛЬНЫМ ОКНОМ ---
+        function closeModal() {
+            const modal = document.getElementById('loginModal');
+            const box = document.getElementById('loginBox');
+            box.classList.remove('translate-y-0', 'opacity-100');
+            box.classList.add('translate-y-10', 'opacity-0');
+
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                document.getElementById('error-msg').style.display = 'none'; // Сброс ошибки
+                document.getElementById('loginForm').reset(); // Сброс формы
+            }, 300); // Ждем окончания анимации
+        }
+
+        // Эффект блюра шапки при скролле
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                nav.classList.add('bg-background/80', 'backdrop-blur-md', 'border-b', 'border-border');
+            } else {
+                nav.classList.remove('bg-background/80', 'backdrop-blur-md', 'border-b', 'border-border');
+            }
+        });
+
+        // --- ТВОЙ ОРИГИНАЛЬНЫЙ СКРИПТ ВХОДА (БЕЗ ИЗМЕНЕНИЙ ЛОГИКИ) ---
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const u = document.getElementById('username').value;
             const p = document.getElementById('password').value;
+            const errorMsg = document.getElementById('error-msg');
+
+            // Анимация кнопки при отправке
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalText = btn.innerText;
+            btn.innerText = 'Проверка...';
+            btn.style.opacity = '0.7';
 
             try {
                 const res = await fetch('/api/login', {
@@ -433,10 +631,21 @@
                 if (res.ok) {
                     window.location.href = '/index.html'; // Redirect to real games site
                 } else {
-                    document.getElementById('error-msg').style.display = 'block';
+                    errorMsg.style.display = 'block';
+                    // Добавляем эффект тряски при ошибке
+                    const box = document.getElementById('loginBox');
+                    box.style.transform = 'translateX(-10px)';
+                    setTimeout(() => box.style.transform = 'translateX(10px)', 50);
+                    setTimeout(() => box.style.transform = 'translateX(-10px)', 100);
+                    setTimeout(() => box.style.transform = 'translateX(0)', 150);
                 }
             } catch (err) {
                 console.error(err);
+                errorMsg.innerText = 'Ошибка соединения с сервером.';
+                errorMsg.style.display = 'block';
+            } finally {
+                btn.innerText = originalText;
+                btn.style.opacity = '1';
             }
         });
     </script>
