@@ -22,3 +22,6 @@ build/
 *.key
 credentials.json
 client_secret.json
+
+# Database
+users.db
