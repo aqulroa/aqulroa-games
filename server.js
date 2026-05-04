@@ -66,31 +66,14 @@ app.use((req, res, next) => {
     // Exclude API routes
     if (req.path.startsWith('/api/')) return next();
 
-    // Determine target path
-    let targetPath = req.path;
-    let isHtmlReq = false;
+    const ext = path.extname(req.path).toLowerCase();
+    
+    // Список расширений, которые точно являются статикой и не требуют проверки
+    const staticAssets = ['.js', '.css', '.png', '.jpg', '.jpeg', '.gif', '.svg', '.ico', '.woff', '.woff2', '.ttf', '.otf', '.webm', '.mp4', '.mp3', '.wav', '.json', '.map', '.glb', '.wasm'];
+    const isStatic = staticAssets.includes(ext);
 
-    try {
-        const absoluteReqPath = path.join(__dirname, req.path);
-        const stat = fs.statSync(absoluteReqPath);
-        
-        if (stat.isDirectory()) {
-            if (!req.path.endsWith('/')) {
-                // Redirect to add trailing slash so relative paths in HTML work correctly
-                return res.redirect(req.path + '/');
-            }
-            targetPath = req.path + 'index.html';
-            isHtmlReq = true;
-        } else if (path.extname(req.path) === '.html') {
-            isHtmlReq = true;
-        }
-    } catch (e) {
-        // Path doesn't exist, let next() handle it (usually 404)
-        // Or if it's just a raw path that might be an HTML route without extension
-        if (req.path === '/' || path.extname(req.path) === '.html') {
-            isHtmlReq = true;
-        }
-    }
+    // Если это не статика и (это .html, или корень, или путь без расширения как /guess)
+    const isHtmlReq = !isStatic && (ext === '.html' || ext === '' || req.path.endsWith('/'));
     
     if (!req.session.userId) {
         // Not authenticated
@@ -98,12 +81,15 @@ app.use((req, res, next) => {
             // Serve watercolors page as dummy
             return res.sendFile(path.join(__dirname, 'watercolors.html'));
         }
-        // Allow other static assets (images, css, js)
         return next();
     } else {
         // Authenticated
         if (isHtmlReq) {
-            // Special case for watercolors: if they explicitly ask for it, serve it normally
+            let targetPath = req.path;
+            if (targetPath.endsWith('/')) targetPath += 'index.html';
+            else if (ext === '') targetPath += '/index.html';
+
+            // Special case for watercolors
             if (targetPath === '/watercolors.html') {
                 return res.sendFile(path.join(__dirname, 'watercolors.html'));
             }
@@ -111,10 +97,7 @@ app.use((req, res, next) => {
             const absolutePath = path.join(__dirname, targetPath);
 
             fs.readFile(absolutePath, 'utf8', (err, data) => {
-                if (err) {
-                    // If file not found, let static handler deal with it
-                    return next();
-                }
+                if (err) return next();
                 
                 // Inject our overlay script before </body>
                 const scriptTag = `\n<script src="/user-overlay.js"></script>\n</body>`;
@@ -124,7 +107,6 @@ app.use((req, res, next) => {
                 return res.send(modifiedHtml);
             });
         } else {
-            // Not HTML, just serve it normally
             next();
         }
     }
