@@ -13,6 +13,7 @@ jobs:
           host: ${{ secrets.HOST }}
           username: root
           key: ${{ secrets.SSH_KEY }}
+          port: 44222
           script: |
             cd /var/www/aqulroa
             git pull origin master
