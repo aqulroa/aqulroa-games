@@ -11,6 +11,8 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://images.unsplash.com">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400;1,600&family=Inter:wght@200;300;400;500;600&display=swap" as="style">
     <link
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400;1,600&family=Inter:wght@200;300;400;500;600&display=swap"
         rel="stylesheet">
@@ -105,6 +107,8 @@
             mix-blend-mode: screen;
             animation: breathe 20s infinite alternate ease-in-out;
             transition: transform 0.3s ease-out;
+            will-change: transform;
+            transform: translateZ(0);
         }
         .blob-1 { width: 50vw; height: 50vw; background: theme('colors.wc1'); top: -10%; left: -10%; animation-delay: 0s; }
         .blob-2 { width: 60vw; height: 60vw; background: theme('colors.wc2'); bottom: -20%; right: -10%; animation-delay: -5s; }
@@ -262,7 +266,7 @@
             <div class="lg:col-span-7 relative h-[600px] w-full reveal reveal-delay-1">
                 <div class="absolute inset-0 glass rounded-3xl overflow-hidden group">
                     <img src="https://images.unsplash.com/photo-1618331835717-801e976710b2?auto=format&fit=crop&q=80&w=1600"
-                        alt="Watercolor texture" class="w-full h-full object-cover art-img opacity-80">
+                        alt="Watercolor texture" loading="lazy" decoding="async" class="w-full h-full object-cover art-img opacity-80">
                     <div class="absolute inset-0 bg-black/20"></div>
 
                     <div
@@ -283,7 +287,7 @@
 
                 <div class="md:col-span-2 lg:col-span-2 glass rounded-3xl overflow-hidden group relative reveal">
                     <img src="https://images.unsplash.com/photo-1543857778-c4a1a3e0b2eb?auto=format&fit=crop&q=80&w=1000"
-                        class="absolute inset-0 w-full h-full object-cover art-img opacity-70">
+                        loading="lazy" decoding="async" class="absolute inset-0 w-full h-full object-cover art-img opacity-70">
                     <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
                     <div class="absolute bottom-0 left-0 p-8 z-10">
                         <h3 class="font-display text-4xl mb-2 text-white">Лессировка</h3>
@@ -307,7 +311,7 @@
                 <div
                     class="md:col-span-1 lg:col-span-1 row-span-2 glass rounded-3xl overflow-hidden group relative reveal reveal-delay-2">
                     <img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&q=80&w=800"
-                        class="absolute inset-0 w-full h-full object-cover art-img opacity-60">
+                        loading="lazy" decoding="async" class="absolute inset-0 w-full h-full object-cover art-img opacity-60">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-black/60"></div>
                     <div class="absolute inset-0 flex flex-col justify-between p-8 z-10">
                         <div
@@ -330,7 +334,7 @@
 
                 <div class="md:col-span-2 glass rounded-3xl overflow-hidden group relative reveal reveal-delay-1">
                     <img src="https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?auto=format&fit=crop&q=80&w=1200"
-                        class="absolute inset-0 w-full h-full object-cover art-img opacity-80">
+                        loading="lazy" decoding="async" class="absolute inset-0 w-full h-full object-cover art-img opacity-80">
                     <div class="absolute inset-0 bg-black/40"></div>
                     <div class="absolute inset-0 flex items-center justify-center z-10">
                         <h2 class="font-display text-5xl font-semibold tracking-wide text-white drop-shadow-2xl">
@@ -355,7 +359,7 @@
                     <div
                         class="lg:col-span-8 h-[70vh] rounded-2xl overflow-hidden group relative cursor-pointer glass p-2">
                         <img src="https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&q=80&w=1600"
-                            class="w-full h-full object-cover rounded-xl art-img">
+                            loading="lazy" decoding="async" class="w-full h-full object-cover rounded-xl art-img">
                     </div>
                     <div class="lg:col-span-4">
                         <p class="text-wc1 text-sm font-mono mb-4">01 // 2026</p>
@@ -381,7 +385,7 @@
                     <div
                         class="lg:col-span-8 h-[70vh] rounded-2xl overflow-hidden group relative cursor-pointer order-1 lg:order-2 glass p-2">
                         <img src="https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&q=80&w=1600"
-                            class="w-full h-full object-cover rounded-xl art-img">
+                            loading="lazy" decoding="async" class="w-full h-full object-cover rounded-xl art-img">
                     </div>
                 </div>
             </div>
@@ -512,7 +516,7 @@
             setTimeout(() => {
                 preloader.style.opacity = '0';
                 setTimeout(() => { preloader.style.display = 'none'; }, 1000);
-            }, 500);
+            }, 100);
         });
 
         // Курсор
