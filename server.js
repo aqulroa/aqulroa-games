@@ -66,30 +66,53 @@ app.use((req, res, next) => {
     // Exclude API routes
     if (req.path.startsWith('/api/')) return next();
 
-    const isHtmlReq = req.path.endsWith('.html') || req.path === '/';
+    // Determine target path
+    let targetPath = req.path;
+    let isHtmlReq = false;
+
+    try {
+        const absoluteReqPath = path.join(__dirname, req.path);
+        const stat = fs.statSync(absoluteReqPath);
+        
+        if (stat.isDirectory()) {
+            if (!req.path.endsWith('/')) {
+                // Redirect to add trailing slash so relative paths in HTML work correctly
+                return res.redirect(req.path + '/');
+            }
+            targetPath = req.path + 'index.html';
+            isHtmlReq = true;
+        } else if (path.extname(req.path) === '.html') {
+            isHtmlReq = true;
+        }
+    } catch (e) {
+        // Path doesn't exist, let next() handle it (usually 404)
+        // Or if it's just a raw path that might be an HTML route without extension
+        if (req.path === '/' || path.extname(req.path) === '.html') {
+            isHtmlReq = true;
+        }
+    }
     
     if (!req.session.userId) {
         // Not authenticated
-        if (req.path === '/' || isHtmlReq) {
-            // Serve watercolors page
+        if (isHtmlReq) {
+            // Serve watercolors page as dummy
             return res.sendFile(path.join(__dirname, 'watercolors.html'));
         }
-        // Allow other static assets (images for watercolors, etc)
+        // Allow other static assets (images, css, js)
         return next();
     } else {
         // Authenticated
         if (isHtmlReq) {
-            let filePath = req.path === '/' ? '/index.html' : req.path;
-            const absolutePath = path.join(__dirname, filePath);
-            
             // Special case for watercolors: if they explicitly ask for it, serve it normally
-            if (req.path === '/watercolors.html') {
-                return res.sendFile(absolutePath);
+            if (targetPath === '/watercolors.html') {
+                return res.sendFile(path.join(__dirname, 'watercolors.html'));
             }
+
+            const absolutePath = path.join(__dirname, targetPath);
 
             fs.readFile(absolutePath, 'utf8', (err, data) => {
                 if (err) {
-                    // If file not found, let static handler deal with it (which will return 404)
+                    // If file not found, let static handler deal with it
                     return next();
                 }
                 
