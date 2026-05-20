@@ -114,6 +114,7 @@ app.use((req, res, next) => {
 
 // Static files fallback
 app.use(express.static(__dirname));
+app.use(express.static(path.join(__dirname, 'guess')));
 
 app.listen(PORT, () => {
     console.log(`Server is running! Access it at http://localhost:${PORT}`);

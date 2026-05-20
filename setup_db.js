@@ -30,7 +30,7 @@ const users = [
     { username: 'slava', prefix: 'mega-alkash', color: '#ffd700', glow: '0 0 10px #ffd700, 0 0 20px #ffd700' }
 ];
 
-const password = 'qwerty';
+const password = 'xui123';
 const salt = bcrypt.genSaltSync(10);
 const hash = bcrypt.hashSync(password, salt);
 
